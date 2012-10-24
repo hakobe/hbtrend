@@ -199,6 +199,9 @@ _.extend( HBTrend.EntriesLoader.prototype, Backbone.Events, {
     nextOffset : 0,
     load: function(tag) {
         var offset = this.nextOffset;
+        if (offset > 1000) {
+            return;
+        }
         $.ajax({
             url  : '/api/entries.json',
             data : {
