@@ -6,6 +6,10 @@ var HBTrend = {
     Collection : {},
     View       : {},
     Router     : undefined,
+    Config     : {
+        range : 14,
+        offsetLimit : 800,
+    },
 };
 
 HBTrend.Model.Tag = Backbone.Model.extend({
@@ -199,7 +203,7 @@ _.extend( HBTrend.EntriesLoader.prototype, Backbone.Events, {
     nextOffset : 0,
     load: function(tag) {
         var offset = this.nextOffset;
-        if (offset > 1000) {
+        if (offset > HBTrend.Config.offsetLimit ) {
             return;
         }
         $.ajax({
@@ -244,7 +248,7 @@ HBTrend.Router = Backbone.Router.extend({
 
         tags.on('add', function(tag) {
             var now = new Date().getTime();
-            _.range(0,14).forEach(function(i) {
+            _.range(0, HBTrend.Config.range).forEach(function(i) {
                 tag.addSlot(HBTrend.Model.Slot.newByDate( new Date( now - (60 * 60 * 24 * 1000) * i ) ));
             });
             var entriesLoader = new HBTrend.EntriesLoader();
@@ -269,8 +273,8 @@ HBTrend.Router = Backbone.Router.extend({
         };
 
         graphView.on('draw', function() {
-            graphView.select( tags.length, 12 );
-            showEntriesAt( tags.length - 1, 12);
+            graphView.select( tags.length, HBTrend.Config.range - 2 );
+            showEntriesAt( tags.length - 1, HBTrend.Config.range - 2);
         });
 
         graphView.on('select', function( column, row ) {

@@ -47,6 +47,10 @@ exports.entries = function(req, res) {
         res.status(404).send('404 Not Found');
         return;
     }
+    if (offset > 1000) {
+        res.status(400).send('400 Bad Request');
+        return;
+    }
 
     var memcached = new Memcached('127.0.0.1:11211');
 
@@ -73,6 +77,10 @@ exports.entries = function(req, res) {
                     var entries;
                     try {
                         entries = convertRssToJSON(body);
+                    }
+                    catch (e) {
+                        memcached.end();
+                        res.json(entries);
                     }
                     if (entries) {
                         memcached.set(cacheKey, entries, 60 * 60, function(err, result) {
