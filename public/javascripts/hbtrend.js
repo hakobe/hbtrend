@@ -198,6 +198,14 @@ HBTrend.View.EntriesItem = Backbone.View.extend({
 });
 
 HBTrend.EntriesLoader = function() { };
+HBTrend.EntriesLoader.xhrs = [];
+HBTrend.EntriesLoader.abortAll = function() {
+    console.log(HBTrend.EntriesLoader.xhrs);
+    HBTrend.EntriesLoader.xhrs.forEach( function(xhr) {
+        xhr.abort();
+    });
+    HBTrend.EntriesLoader.xhrs = [];
+};
 _.extend( HBTrend.EntriesLoader.prototype, Backbone.Events, {
     limit : 40,
     nextOffset : 0,
@@ -206,7 +214,7 @@ _.extend( HBTrend.EntriesLoader.prototype, Backbone.Events, {
         if (offset > HBTrend.Config.offsetLimit ) {
             return;
         }
-        $.ajax({
+        var jqXHR = $.ajax({
             url  : '/api/entries.json',
             data : {
                 tag    : tag.get('name'),
@@ -228,6 +236,7 @@ _.extend( HBTrend.EntriesLoader.prototype, Backbone.Events, {
             this.nextOffset = offset + this.limit;
             this.trigger('load', tag, entries);
         }, this));
+        HBTrend.EntriesLoader.xhrs.push( jqXHR );
     }
 });
 
@@ -241,6 +250,8 @@ HBTrend.Router = Backbone.Router.extend({
         var inputView = new HBTrend.View.TagInputBox({ el : $('input#tags') });
         var graphView = new HBTrend.View.Graph({ el : $('div#graph'), collection : tags });
         var entriesView = new HBTrend.View.Entries({ el : $('ul#entries'), collection : new HBTrend.Collection.Entries() });
+
+        HBTrend.EntriesLoader.abortAll();
 
         inputView.on('input', _.bind(function (newTags) {
             this.navigate('trends/' + encodeURIComponent( newTags ), { trigger : true } );
