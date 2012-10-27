@@ -11,7 +11,7 @@
         "jade"            : "*",
         "less-middleware" : "*",
         "request"         : "*",
-        "libxmljs"        : "*"
+        "libxmljs"        : "*",
         "memcached"       : "*"
     }
 }
