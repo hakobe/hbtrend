@@ -152,7 +152,7 @@ HBTrend.View.Graph = Backbone.View.extend({
             width : 940,
             height : 200,
             vAxis : { title : 'n Entries' },
-            pointSize: 3,
+            pointSize: 5,
         });
         google.visualization.events.addListener(this.chart, 'select', _.bind(function() {
             var selection = this.chart.getSelection();
