@@ -12,5 +12,6 @@
         "less-middleware" : "*",
         "request"         : "*",
         "libxmljs"        : "*"
+        "memcached"       : "*"
     }
 }
