@@ -254,7 +254,7 @@ HBTrend.Router = Backbone.Router.extend({
         HBTrend.EntriesLoader.abortAll();
 
         inputView.on('input', _.bind(function (newTags) {
-            this.navigate('trends/' + encodeURIComponent( newTags ), { trigger : true } );
+            this.navigate('trends/' + encodeURI( newTags ), { trigger : true } );
         }, this));
 
         tags.on('add', function(tag) {
